@@ -2,7 +2,7 @@
 
 #### A lightweight Python script for downloading youtube videos without any thirdparty library except requests
 
-Instantiate an object by passing videoId of youtube video.
+Instantiate an object by passing video-id of youtube video.
 
 ```python
 from youtube-rev import YoutubeRev
