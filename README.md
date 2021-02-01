@@ -46,6 +46,6 @@ y1.filter["videos"]
 ### Note
 
 script can't retrive those video which are can't save offline in youtube app 
-in other words whose videos can't be embedded.
+in other words those videos can't be embedded.
 
 #### More Feature will be added soon such as ffmpeg integration , cli args , more filtering , playlist downloader.
