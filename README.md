@@ -42,6 +42,17 @@ This return link and json data of that video in which both audio and video is av
 ```python
 y1.filter["videos"]
 ```
+This will download that video file which have both audio and video
+
+```python
+y1.download()
+```
+
+This method takes two parameter itag="itag of file" , audio="True/False" 
+
+```python
+y1.downloadParams(itag=241 , audio=True)
+#This will download both audio and video file and merge them using ffmpeg
 
 ### Note
 
