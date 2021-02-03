@@ -53,10 +53,11 @@ This method takes two parameter itag="itag of file" , audio="True/False"
 ```python
 y1.downloadParams(itag=241 , audio=True)
 #This will download both audio and video file and merge them using ffmpeg
-
+```
 ### Note
 
-script can't retrive those video which are can't save offline in youtube app 
-in other words those videos can't be embedded.
+script can't download those video which are can't save offline in youtube app 
+in other words youtube cipher those videos urls. It is very hard to crack beacuse they keep
+changing their algo
 
 #### More Feature will be added soon such as ffmpeg integration , cli args , more filtering , playlist downloader.
