@@ -8,7 +8,11 @@ Instantiate an object by passing video-id of youtube video.
 from youtube-rev import YoutubeRev
 y1 = YoutubeRev("17qbqlCgyEg")
 ```
+Return details about video such as type , quality , itag , audio present or not
 
+```python
+y1.formatViewer()
+```
 Return all the video related json data such codec , itags and other stuffs.
 
 ```python 
@@ -48,7 +52,7 @@ This will download that video file which have both audio and video
 y1.download()
 ```
 
-This method takes two parameter itag="itag of file" , audio="True/False" 
+This method takes two parameter itag="itag of file" , audio="True/False"  , you can find itag using .formatViewer() method
 
 ```python
 y1.downloadParams(itag=241 , audio=True)
