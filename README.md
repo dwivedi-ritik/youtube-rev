@@ -1,6 +1,6 @@
 ## Youtube-rev
 
-#### A lightweight Python script for downloading youtube videos without any thirdparty library except requests
+#### A lightweight Python script for downloading youtube videos 
 
 Instantiate an object by passing video-id of youtube video.
 
