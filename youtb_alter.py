@@ -89,7 +89,6 @@ class YoutubeRev(object):
 		res = re.search(r"/(.+);", extension_)
 		extension_ = res.group(1)
 
-
 	def videoData(self):
 		try:
 			return self.jsonData['streamingData']
@@ -102,7 +101,6 @@ class YoutubeRev(object):
 		except Exception:
 			raise KeyError("Failed to retrive ")
 
-
 	def download(self):
 		
 		"""Only download those videos which have audio and videos Ocassionaly they are in either 720p or 360"""
@@ -114,7 +112,7 @@ class YoutubeRev(object):
 		videoUrl = self.filter["videos"][0]["url"]
 		with open(f"{self.title}.{extension_}" , "wb") as v:
 			vid = requests.get(videoUrl , stream=True)
-			for vidContent in vid.iter_content(chunk_size=1024):
+			for vidContent in vid.iter_content(chunk_size=512):
 				v.write(vidContent)
 
 
@@ -135,7 +133,7 @@ class YoutubeRev(object):
 			videoName = f"{self.title}.{extension_}"
 			with open(f"{self.title}.{extension_}" , "wb") as v:
 				vid = requests.get(vidUrl , stream=True)
-				for vidContent in vid.iter_content(chunk_size=1024):
+				for vidContent in vid.iter_content(chunk_size=512):
 					v.write(vidContent)
 		if audio:
 			"""Retriving highest quality audio"""
@@ -148,7 +146,7 @@ class YoutubeRev(object):
 			audioName = f"{self.title}.{extension_}"
 			with open(f"{self.title}.{extension_}" , "wb") as a:
 				aud = requests.get(audioUrl , stream=True)
-				for audContent in aud.iter_content(chunk_size=1024):
+				for audContent in aud.iter_content(chunk_size=512):
 					a.write(audContent)
 		if itag != None and audio:
 			"""Added ffmpeg feature for encoding"""
@@ -157,6 +155,54 @@ class YoutubeRev(object):
 			except:
 				raise Exception("ffmpeg error: check if ffmpeg is installed or not or is it on your path ?")
 
+	def formatedViewer(self):
+		#Adaptive Videos
+		adaptiveVideos = []
+		audios = []
+		videos = []
+
+		for obj in self.filter["adaptiveVideos"]:
+			temp = []
+			temp.append("Video")
+			temp.append(obj["itag"])
+			temp.append(obj["qualityLabel"])
+			temp.append("False")
+			adaptiveVideos.append(temp)
+			
+		for obj in self.filter["audios"]:
+			temp = []
+			temp.append("Audio")
+			temp.append(obj["itag"])
+			temp.append(obj["quality"])
+			temp.append("True")
+			audios.append(temp)
+
+		for obj in self.filter["videos"]:
+			temp = []
+			temp.append("Video")
+			temp.append(obj["itag"])
+			temp.append(obj["qualityLabel"])
+			temp.append("True")
+			videos.append(temp)
+
+		#Writing data in tabular format
+		print("Type     Itag     Quality  Audio")
+		print("-"*32)
+		for adaptiveVideo in adaptiveVideos:
+			for data in adaptiveVideo:
+				text = "{}{}".format(data , " "*9)
+				print(text[:9] , end="")
+			print()
+		for audio in audios:
+			for data in audio:
+				text = "{}{}".format(data , " "*9)
+				print(text[:9] , end="")
+			print()
+		for video in videos:
+			for data in video:
+				text = "{}{}".format(data , " "*9)
+				print(text[:9] , end="")
+			print()
 			
 			
 #Instantiate an object by passing videoId of youtube video
@@ -171,6 +217,7 @@ class YoutubeRev(object):
 #(y1.filter["audios"])#This contain audio link of that video do note youtube Audio are in webm format you have to encode in mp3
 #(y1.filter["videos"])#This contain link of that video in which both audio and video is available
 
+#y1.formatViewer() return details in tabular format , there you can find itag quality 
 #Added feature of downloading videos
 #y1.download() #This will download that video which have both audio and video
 #y1.downloadParams(itag=itag_value , audio=True/False) #This will download the file which itag is provided , audio is optional , True value download the highest available audio quality
