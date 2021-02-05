@@ -156,50 +156,26 @@ class YoutubeRev(object):
 				raise Exception("ffmpeg error: check if ffmpeg is installed or not or is it on your path ?")
 
 	def formatedViewer(self):
-		#Adaptive Videos
 		adaptiveVideos = []
 		audios = []
 		videos = []
-
 		for obj in self.filter["adaptiveVideos"]:
-			temp = []
-			temp.append("Video")
-			temp.append(obj["itag"])
-			temp.append(obj["qualityLabel"])
-			temp.append("False")
+			temp = ["Video" , obj["itag"] , obj["qualityLabel"] , "False"]
 			adaptiveVideos.append(temp)
 			
 		for obj in self.filter["audios"]:
-			temp = []
-			temp.append("Audio")
-			temp.append(obj["itag"])
-			temp.append(obj["quality"])
-			temp.append("True")
+			temp = ["Audio" , obj["itag"] ,obj["quality"] , "True" ]
 			audios.append(temp)
 
 		for obj in self.filter["videos"]:
-			temp = []
-			temp.append("Video")
-			temp.append(obj["itag"])
-			temp.append(obj["qualityLabel"])
-			temp.append("True")
+			temp = ["Video" , obj["itag"] ,obj["qualityLabel"] , "True" ]
 			videos.append(temp)
 
 		#Writing data in tabular format
 		print("Type     Itag     Quality  Audio")
 		print("-"*32)
-		for adaptiveVideo in adaptiveVideos:
-			for data in adaptiveVideo:
-				text = "{}{}".format(data , " "*9)
-				print(text[:9] , end="")
-			print()
-		for audio in audios:
-			for data in audio:
-				text = "{}{}".format(data , " "*9)
-				print(text[:9] , end="")
-			print()
-		for video in videos:
-			for data in video:
+		for arr in adaptiveVideos+audios+videos:
+			for data in arr:
 				text = "{}{}".format(data , " "*9)
 				print(text[:9] , end="")
 			print()
