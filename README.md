@@ -8,7 +8,7 @@ Instantiate an object by passing video-id of youtube video.
 from youtube-rev import YoutubeRev
 y1 = YoutubeRev("17qbqlCgyEg")
 ```
-Return details about video such as type , quality , itag , audio present or not
+Print details about video such as type , quality , itag , audio present or not
 
 ```python
 y1.formatViewer()
