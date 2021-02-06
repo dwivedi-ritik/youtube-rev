@@ -14,6 +14,7 @@ only used request library for get post request"""
 import requests
 import re
 import subprocess
+import os
 
 class YoutubeRev(object):
 
@@ -85,9 +86,10 @@ class YoutubeRev(object):
 		return junkFiltered
 
 	def __getExtension(self , obj):
-		extension_ = self.filter[""][0]["mimeType"]
+		extension_ = obj["mimeType"]
 		res = re.search(r"/(.+);", extension_)
-		extension_ = res.group(1)
+		return res.group(1)
+
 
 	def videoData(self):
 		try:
@@ -101,6 +103,22 @@ class YoutubeRev(object):
 		except Exception:
 			raise KeyError("Failed to retrive ")
 
+
+	def download(self):
+		
+		"""Only download those videos which have audio and videos Ocassionaly they are in either 720p or 360"""
+		
+		extension_ = self.filter["videos"][0]["mimeType"]
+		res = re.search(r"/(.+);", extension_)
+		extension_ = res.group(1)
+
+		videoUrl = self.filter["videos"][0]["url"]
+		with open(f"{self.title}.{extension_}" , "wb") as v:
+			vid = requests.get(videoUrl , stream=True)
+			for vidContent in vid.iter_content(chunk_size=512):
+				v.write(vidContent)
+
+
 	def downloadParams(self , itag=None , audio=False):
 		if itag != None:
 			userObj = dict()
@@ -108,15 +126,12 @@ class YoutubeRev(object):
 				if int(obj["itag"]) == itag:
 					userObj = obj
 					break
-			#Finding Extension
-
-			extension_ = userObj["mimeType"]
-			res = re.search(r"/(.+);", extension_)
-			extension_ = res.group(1)
-			print("[ Downloading Video File ]")
 			vidUrl = userObj["url"]
-			videoName = f"{self.title}.{extension_}"
-			with open(f"{self.title}.{extension_}" , "wb") as v:
+			vidExtension = self.__getExtension(userObj)
+			videoName = f"{self.title}.{vidExtension}"
+			print("[ Downloading Video File ]")
+			with open(videoName , "wb") as v:
+				#Retriving and making video file
 				vid = requests.get(vidUrl , stream=True)
 				totalSize = int(vid.headers["Content-Length"])
 				maxSize = totalSize//1024
@@ -126,37 +141,37 @@ class YoutubeRev(object):
 					downloadedSize = (size/totalSize)*100
 					v.write(vidContent)
 					print("[ {:.2f}% downloaded of {} MB ]".format(round(downloadedSize, 2) , maxSize//1024) , end="\r")
-				print("\n[ Video File Downloaded ]")
-		if audio and itag > 50:
+			print("\n[ Video File Downloaded ]")
+		
+
+		if audio:
 			"""Retriving highest quality audio"""
 			audioObj = self.filter["audios"][0]
 			audioUrl = audioObj["url"]
-
-			extension_ = audioObj["mimeType"]
-			res = re.search(r"/(.+);", extension_)
-			extension_ = res.group(1)
 			print("[ Downloading Audio File ]")
-			audioName = f"{self.title}.{extension_}"
-			with open(f"{self.title}.{extension_}" , "wb") as a:
+			audioName = f"{self.title}.AUD"
+
+			#Downloading and creating audio file
+			with open(audioName , "wb") as a:
 				aud = requests.get(audioUrl , stream=True)
 				totalSize = int(aud.headers["Content-Length"])
 				maxSize = totalSize//1024
 				size = 0
 				for audContent in aud.iter_content(chunk_size=1024):
+					#For Showing the downloaded percentages
 					size += len(audContent)
 					downloadedSize = (size/totalSize)*100
 					a.write(audContent)
-
 					print("[ {:.2f}% downloaded of {}MB ]".format(round(downloadedSize, 2) , maxSize//1024) , end="\r")
-				print("\n[ Audio File Downloaded ]")
+			print("\n[ Audio File Downloaded ]")
 
 		if itag != None and audio:
 			"""Added ffmpeg feature for encoding"""
 			try:
 				print("[ Merging Audio And Video File ]")
 				subprocess.run(["ffmpeg" , "-i" ,videoName, "-i" , audioName, "-c" , "copy" , self.title+".mkv"])
-				# os.remove(videoName)
-				# os.remove(audioName)
+				os.remove(videoName)
+				os.remove(audioName)
 			except:
 				raise Exception("ffmpeg error: check if ffmpeg is installed or not or is it on your path ?")
 
@@ -184,7 +199,7 @@ class YoutubeRev(object):
 				text = "{}{}".format(data , " "*9)
 				print(text[:9] , end="")
 			print()
-			
+		
 			
 #Instantiate an object by passing videoId of youtube video
 # y1 = YoutubeRev("youtube_url")
