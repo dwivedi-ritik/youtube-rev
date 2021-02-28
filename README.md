@@ -60,8 +60,7 @@ y1.downloadParams(itag=241 , audio=True)
 ```
 ### Note
 
-script can't download those video which are can't save offline in youtube app 
-in other words youtube cipher those videos urls. It is very hard to crack beacuse they keep
-changing their algo
+This script can't download those video which restricted for download by creator.
+Youtube cipher the video urls , they keep changing their algo.
 
 
