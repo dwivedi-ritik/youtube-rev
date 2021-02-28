@@ -1,20 +1,22 @@
 from youtb_alter import YoutubeRev
 import sys
 
+"""Command Line for the script"""
+
 url = "".join(sys.argv[1])
+audio = False
+if sys.argv[-1] == "audio": 
+    audio = True
 try:
-    if sys.argv[3] == "audio": 
-        audio = True
-    itag = int(sys.argv[2])
+	if isinstance(int(sys.argv[2]) , int):
+		itag = sys.argv[2]
 except Exception:
     itag = None
-    audio = False
-
 obj1 = YoutubeRev(url)
-obj1.formatedViewer()
 
-if itag != None:
-    obj1.downloadParams(itag=itag ,audio=audio)
-
+if not itag and not audio:
+	obj1.formatedViewer()
+else:
+	obj1.downloadParams(itag = itag , audio=audio)
 
 """Muskil Waqt Commando Shakht"""
