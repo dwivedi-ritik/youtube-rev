@@ -164,6 +164,13 @@ class YoutubeRev(object):
 					a.write(audContent)
 					print("[ {:.2f}% downloaded of {}MB ]".format(round(downloadedSize, 2) , maxSize//1024) , end="\r")
 			print("\n[ Audio File Downloaded ]")
+			
+			if itag == None:
+				try:
+					print("[ Encoding to mp3 ] ")
+					subprocess.run("ffmpeg" , "-i" , audioName , "-f" , "mp3" , self.title+".mp3")
+				except:
+					os.rename(audioName , self.title+".mp3")
 
 		if itag != None and audio:
 			"""Added ffmpeg feature for encoding"""
