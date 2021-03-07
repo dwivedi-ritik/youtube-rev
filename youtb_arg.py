@@ -9,7 +9,7 @@ if sys.argv[-1] == "audio":
     audio = True
 try:
 	if isinstance(int(sys.argv[2]) , int):
-		itag = sys.argv[2]
+		itag = int(sys.argv[2])
 except Exception:
     itag = None
 obj1 = YoutubeRev(url)
